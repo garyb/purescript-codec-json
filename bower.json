@@ -21,7 +21,8 @@
     "purescript-ordered-collections": "^3.1.1",
     "purescript-type-equality": "^4.0.1",
     "purescript-variant": "^8.0.0",
-    "purescript-foreign-object": "^4.1.0"
+    "purescript-foreign-object": "^4.1.0",
+    "purescript-transformers": "^6.0.0"
   },
   "devDependencies": {
     "purescript-quickcheck": "^8.0.1"
