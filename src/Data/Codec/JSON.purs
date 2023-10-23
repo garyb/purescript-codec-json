@@ -23,6 +23,7 @@ module Data.Codec.JSON
   , record
   , recordProp
   , recordPropOptional
+  , nullable
   , named
   , coercible
   , prismaticCodec
@@ -326,6 +327,26 @@ recordPropOptional p codecA codecR = Codec.codec dec' enc'
     case Record.unsafeGet key val of
       Just a → Tuple key (Codec.encode codecA a) : w
       Nothing → w
+
+-- | A codec for JSON values that can be `null` or some other value.
+-- |
+-- | This should not be used if an accurate representation of nested `Maybe` values is required, as
+-- | values like `Just Nothing` cannot be encoded. For nested `Maybe`s consider using
+-- | `Data.Codec.JSON.Common.maybe` instead.
+nullable ∷ ∀ a. Codec a → Codec (Maybe a)
+nullable codec =
+  Codec.codec'
+    ( \j → except case decode codec j of
+        Left err1 →
+          case decode null j of
+            Left err2 → Left (err1 <> err2)
+            Right _ → Right Nothing
+        Right value →
+          Right (Just value)
+    )
+    case _ of
+      Just a → encode codec a
+      Nothing → J.null
 
 -- | A codec for introducing names into error messages - useful when definiting a codec for a type
 -- | synonym for a record, for instance.

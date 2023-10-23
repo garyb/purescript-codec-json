@@ -19,7 +19,7 @@ import Prelude hiding (identity, map, void)
 import Data.Array as Array
 import Data.Array.NonEmpty as NEA
 import Data.Codec as Codec
-import Data.Codec.JSON (Codec, DecodeError(..), IndexedCodec, PropCodec, array, boolean, char, codePoint, coercible, decode, encode, fix, hoist, identity, index, indexedArray, int, jarray, jobject, json, named, null, number, object, prismaticCodec, prop, record, recordProp, recordPropOptional, string, void, (<~<), (>~>), (~)) as Exports
+import Data.Codec.JSON (Codec, DecodeError(..), IndexedCodec, PropCodec, array, boolean, char, codePoint, coercible, decode, encode, fix, hoist, identity, index, indexedArray, int, jarray, jobject, json, named, null, nullable, number, object, prismaticCodec, prop, record, recordProp, recordPropOptional, string, void, (<~<), (>~>), (~)) as Exports
 import Data.Codec.JSON ((~))
 import Data.Codec.JSON as CJ
 import Data.Codec.JSON.Sum (taggedSum)
