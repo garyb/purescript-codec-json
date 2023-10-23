@@ -69,6 +69,9 @@ main = do
   log "Checking fixed-point codec"
   quickCheck propFix
 
+  log "Checking nullable codec"
+  quickCheck propNullable
+
 propNull ∷ Gen Result
 propNull = propCodec (pure unit) CJ.null
 
@@ -92,6 +95,9 @@ propJArray = propCodec'' (J.print <<< J.fromJArray) genJArray CJ.jarray
 
 propJObject ∷ Gen Result
 propJObject = propCodec'' (J.print <<< J.fromJObject) genJObject CJ.jobject
+
+propNullable ∷ Gen Result
+propNullable = propCodec (GenC.genMaybe genInt) (CJ.nullable CJ.int)
 
 type TestRecord = { tag ∷ String, x ∷ Int, y ∷ Boolean }
 
