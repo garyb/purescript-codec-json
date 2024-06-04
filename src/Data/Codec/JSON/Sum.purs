@@ -55,8 +55,22 @@ taggedSum name printTag parseTag f g = Codec.codec decodeCase encodeCase
   encodeCase ∷ a → JSON
   encodeCase a = case g a of
     Tuple tag value →
-      Codec.encode CJ.jobject $
-        JO.fromEntries $ Array.catMaybes
-          [ Just $ Tuple "tag" (Codec.encode CJ.string (printTag tag))
-          , Tuple "value" <$> value
-          ]
+      Codec.encode CJ.jobject
+        $ JO.fromEntries
+        $ Array.catMaybes
+            [ Just $ Tuple "tag" (Codec.encode CJ.string (printTag tag))
+            , Tuple "value" <$> value
+            ]
+
+-- | A helper for defining JSON codecs for "enum" sum types, where every
+-- | constructor is nullary, and the type will be encoded as a string.
+enumSum ∷ ∀ a. (a → String) → (String → Maybe a) → CJ.Codec a
+enumSum printTag parseTag = Codec.codec' decode encode
+  where
+  decode json = except do
+    tag ← CJ.decode CJ.string json
+    case parseTag tag of
+      Nothing → Left (Error.basic $ "Unexpected value '" <> tag <> "' found")
+      Just a → pure a
+
+  encode = Codec.encode CJ.string <<< printTag
