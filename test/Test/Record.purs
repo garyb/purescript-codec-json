@@ -4,8 +4,10 @@ import Prelude
 
 import Control.Monad.Gen as Gen
 import Control.Monad.Gen.Common as GenC
+import Data.Codec.JSON.Common (DecodeError(..))
 import Data.Codec.JSON.Common as CJ
 import Data.Codec.JSON.Record as CJR
+import Data.Either (Either(..))
 import Data.Maybe (Maybe(..))
 import Data.Newtype (class Newtype, unwrap, wrap)
 import Data.Profunctor (dimap)
@@ -14,6 +16,7 @@ import Effect (Effect)
 import Effect.Console (log)
 import JSON as J
 import JSON.Object as JO
+import JSON.Path as JP
 import Test.QuickCheck (assertEquals, quickCheck, quickCheckGen)
 import Test.QuickCheck.Gen (Gen)
 import Test.Util (genInt, propCodec)
@@ -93,5 +96,17 @@ main = do
     v ← genInner
     let obj = J.toJObject $ CJ.encode innerCodec (v { o = Just b })
     pure $ assertEquals (Just [ "m", "n", "o" ]) (JO.keys <$> obj)
+
+  log "Check record with two errors has both reported"
+  quickCheckGen do
+    n ← Gen.chooseBool
+    m ← genInt
+    o ← Gen.chooseBool
+    let
+      codec = CJR.object { n: CJ.boolean, m: CJ.int, o: CJ.boolean }
+      encoded = CJ.encode codec { n, m, o }
+      decoded = CJ.decode innerCodec encoded
+      error = DecodeError { causes: [], message: "Expected value of type Int", path: JP.AtKey "n" JP.Tip }
+    pure $ assertEquals (Left error) decoded
 
   pure unit
