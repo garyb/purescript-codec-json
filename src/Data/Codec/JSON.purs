@@ -210,10 +210,13 @@ type PropCodec a =
     a
     a
 
--- | A codec for objects that are encoded with specific properties.
+-- | A codec for objects that are encoded with specific properties. This codec
+-- | will ignore any unknown properties in the incoming record. Use
+-- | `Data.Codec.JSON.Strict.objectStrict` for a version that fails upon
+-- | encountering unknown properties.
 -- |
--- | See also `Data.Codec.JSON.Record.object` for a more commonly useful
--- | version of this function.
+-- | See also `Data.Codec.JSON.Record.object` for a more commonly useful version
+-- | of this function.
 object ∷ ∀ a. PropCodec a → Codec a
 object codec =
   Codec.codec'
