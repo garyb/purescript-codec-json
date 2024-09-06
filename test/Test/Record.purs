@@ -37,19 +37,11 @@ type InnerR =
 
 newtype Outer = Outer OuterR
 
-derive instance newtypeOuter ∷ Newtype Outer _
+derive instance Newtype Outer _
+derive instance Eq Outer
 
-instance showOuter ∷ Show Outer where
+instance Show Outer where
   show (Outer r) = "Outer " <> J.print (CJ.encode outerCodec r)
-
-instance eqOuter ∷ Eq Outer where
-  eq (Outer o1) (Outer o2) =
-    o1.a == o2.a
-      && o1.b == o2.b
-      && case o1.c, o2.c of
-        Nothing, Nothing → true
-        Just i1, Just i2 → i1.n == i2.n && i1.m == i2.m
-        _, _ → false
 
 outerCodec ∷ CJ.Codec OuterR
 outerCodec =
@@ -111,22 +103,24 @@ main = do
   quickCheckGen do
     b ← Gen.chooseBool
     n ← genInt
-    let obj = J.fromJObject $ JO.fromEntries
-                [ "m" /\ J.fromBoolean b
-                , "n" /\ J.fromInt n
-                , "bogus" /\ J.fromInt 42
-                ]
+    let
+      obj = J.fromJObject $ JO.fromEntries
+        [ "m" /\ J.fromBoolean b
+        , "n" /\ J.fromInt n
+        , "bogus" /\ J.fromInt 42
+        ]
     pure $ assertEquals (CJ.decode innerCodec obj) (Right { m: b, n, o: Nothing })
 
   log "Check failing on unrecognized fields"
   quickCheckGen do
     b ← Gen.chooseBool
     n ← genInt
-    let obj = J.fromJObject $ JO.fromEntries
-                [ "m" /\ J.fromBoolean b
-                , "n" /\ J.fromInt n
-                , "bogus" /\ J.fromInt 42
-                ]
+    let
+      obj = J.fromJObject $ JO.fromEntries
+        [ "m" /\ J.fromBoolean b
+        , "n" /\ J.fromInt n
+        , "bogus" /\ J.fromInt 42
+        ]
     pure $ assertEquals
       (lmap Error.print $ CJ.decode innerCodecStrict obj)
       (Left "Unknown field(s): bogus")

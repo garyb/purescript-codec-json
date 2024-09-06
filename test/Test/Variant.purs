@@ -61,8 +61,8 @@ codecMaybe codecA =
   fromVariant = V.case_
     # V.on _Just Just
     # V.on _Nothing (const Nothing)
-  _Just = Proxy ∷ Proxy "just"
-  _Nothing = Proxy ∷ Proxy "nothing"
+  _Just = Proxy @"just"
+  _Nothing = Proxy @"nothing"
 
 codecMaybeMatch ∷ ∀ a. CJ.Codec a → CJ.Codec (Maybe a)
 codecMaybeMatch codecA =
@@ -74,8 +74,8 @@ codecMaybeMatch codecA =
     )
   where
   toVariant = case _ of
-    Just a → V.inj (Proxy ∷ _ "just") a
-    Nothing → V.inj (Proxy ∷ _ "nothing") unit
+    Just a → V.inj (Proxy @"just") a
+    Nothing → V.inj (Proxy @"nothing") unit
   fromVariant = V.match
     { just: Just
     , nothing: \_ → Nothing
@@ -95,16 +95,16 @@ codecEither codecA codecB =
   fromVariant = V.case_
     # V.on _Left Left
     # V.on _Right Right
-  _Left = Proxy ∷ Proxy "left"
-  _Right = Proxy ∷ Proxy "right"
+  _Left = Proxy @"left"
+  _Right = Proxy @"right"
 
 genVariant ∷ Gen TestVariant
 genVariant = do
   tag ← chooseInt 1 3
   case tag of
-    1 → V.inj (Proxy ∷ Proxy "a") <$> genInt
-    2 → V.inj (Proxy ∷ Proxy "b") <$> genAsciiString
-    _ → V.inj (Proxy ∷ Proxy "c") <$> GenC.genMaybe chooseBool
+    1 → V.inj (Proxy @"a") <$> genInt
+    2 → V.inj (Proxy @"b") <$> genAsciiString
+    _ → V.inj (Proxy @"c") <$> GenC.genMaybe chooseBool
 
 codecVariant ∷ CJ.Codec TestVariant
 codecVariant = CJV.variantMatch
