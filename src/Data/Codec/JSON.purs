@@ -57,7 +57,7 @@ import Prim.Coerce (class Coercible)
 import Prim.Row as Row
 import Record.Unsafe as Record
 import Safe.Coerce (coerce)
-import Type.Proxy (Proxy)
+import Type.Proxy (Proxy(..))
 import Unsafe.Coerce (unsafeCoerce)
 
 -- | Codec type for `Json` values.
@@ -246,15 +246,14 @@ prop key codec =
 -- | `{ "name": "Karl", "age": 25 }` we would define a codec like this:
 -- | ```
 -- | import Data.Codec.JSON as CJ
--- | import Type.Proxy (Proxy(..))
 -- |
 -- | type Person = { name ∷ String, age ∷ Int }
 -- |
 -- | codecPerson ∷ CJ.Codec Person
 -- | codecPerson =
 -- |   CJ.object $ CJ.record
--- |     # CJ.recordProp (Proxy :: _ "name") CJ.string
--- |     # CJ.recordProp (Proxy :: _ "age") CJ.int
+-- |     # CJ.recordProp @"name" CJ.string
+-- |     # CJ.recordProp @"age" CJ.int
 -- | ```
 -- |
 -- | See also `Data.Codec.JSON.Record.object` for a more commonly useful
@@ -265,15 +264,14 @@ record = Codec.Codec (const (pure {})) pure
 -- | Used with `record` to define codecs for record types that encode into JSON
 -- | objects of the same shape. See the comment on `record` for an example.
 recordProp
-  ∷ ∀ p a r r'
+  ∷ ∀ @p a r r'
   . IsSymbol p
   ⇒ Row.Cons p a r r'
-  ⇒ Proxy p
-  → Codec a
+  ⇒ Codec a
   → PropCodec (Record r)
   → PropCodec (Record r')
-recordProp p codecA codecR =
-  let key = reflectSymbol p in Codec.codec (dec' key) (enc' key)
+recordProp codecA codecR =
+  let key = reflectSymbol (Proxy @p) in Codec.codec (dec' key) (enc' key)
   where
   dec' ∷ String → JObject → Except DecodeError (Record r')
   dec' key obj = do
@@ -300,17 +298,16 @@ recordProp p codecA codecR =
 -- |
 -- | The property will be omitted when encoding and the value is `Nothing`.
 recordPropOptional
-  ∷ ∀ p a r r'
+  ∷ ∀ @p a r r'
   . IsSymbol p
   ⇒ Row.Cons p (Maybe a) r r'
-  ⇒ Proxy p
-  → Codec a
+  ⇒ Codec a
   → PropCodec (Record r)
   → PropCodec (Record r')
-recordPropOptional p codecA codecR = Codec.codec dec' enc'
+recordPropOptional codecA codecR = Codec.codec dec' enc'
   where
   key ∷ String
-  key = reflectSymbol p
+  key = reflectSymbol (Proxy @p)
 
   dec' ∷ JObject → Except DecodeError (Record r')
   dec' obj = do

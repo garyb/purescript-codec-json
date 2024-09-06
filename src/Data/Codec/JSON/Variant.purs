@@ -47,8 +47,8 @@ import Unsafe.Coerce (unsafeCoerce)
 -- |       })
 -- |   where
 -- |   toVariant = case _ of
--- |     Just a → V.inj (Proxy ∷ _ "just") a
--- |     Nothing → V.inj (Proxy ∷ _ "nothing") unit
+-- |     Just a → V.inj @"just" a
+-- |     Nothing → V.inj @"nothing" unit
 -- |   fromVariant = V.match
 -- |     { just: Just
 -- |     , nothing: \_ → Nothing
@@ -60,7 +60,7 @@ variantMatch
   ⇒ VariantCodec rl ri ro
   ⇒ Record ri
   → CJ.Codec (Variant ro)
-variantMatch = variantCodec (Proxy ∷ Proxy rl)
+variantMatch = variantCodec (Proxy @rl)
 
 -- | Builds codecs for variants in combination with `variantCase`.
 -- |
@@ -82,8 +82,8 @@ variantMatch = variantCodec (Proxy ∷ Proxy rl)
 -- |   fromVariant = V.case_
 -- |     # V.on _Just Just
 -- |     # V.on _Nothing (const Nothing)
--- |   _Just = Proxy ∷ Proxy "just"
--- |   _Nothing = Proxy ∷ Proxy "nothing"
+-- |   _Just = Proxy @"just"
+-- |   _Nothing = Proxy @"nothing"
 -- |```
 variant ∷ CJ.Codec (Variant ())
 variant = Codec (\_ → except (Left (Error.basic "Unexpected value"))) case_
@@ -134,10 +134,10 @@ variantCase proxy eacodec (Codec dec enc) = Codec.Codec dec' enc'
 class VariantCodec (rl ∷ RL.RowList Type) (ri ∷ Row Type) (ro ∷ Row Type) | rl → ri ro where
   variantCodec ∷ ∀ proxy. proxy rl → Record ri → CJ.Codec (Variant ro)
 
-instance variantCodecNil ∷ VariantCodec RL.Nil () () where
+instance VariantCodec RL.Nil () () where
   variantCodec _ _ = variant
 
-instance variantCodecCons ∷
+instance
   ( VariantCodec rs ri' ro'
   , R.Cons sym (Either a (CJ.Codec a)) ri' ri
   , R.Cons sym a ro' ro
@@ -146,10 +146,10 @@ instance variantCodecCons ∷
   ) ⇒
   VariantCodec (RL.Cons sym co rs) ri ro where
   variantCodec _ codecs =
-    variantCase (Proxy ∷ Proxy sym) codec tail
+    variantCase (Proxy @sym) codec tail
     where
     codec ∷ Either a (CJ.Codec a)
-    codec = TE.from (Record.get (Proxy ∷ Proxy sym) codecs)
+    codec = TE.from (Record.get (Proxy @sym) codecs)
 
     tail ∷ CJ.Codec (Variant ro')
-    tail = variantCodec (Proxy ∷ Proxy rs) ((unsafeCoerce ∷ Record ri → Record ri') codecs)
+    tail = variantCodec (Proxy @rs) ((unsafeCoerce ∷ Record ri → Record ri') codecs)

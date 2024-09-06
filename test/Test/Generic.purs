@@ -14,10 +14,10 @@ import Test.Util (propCodec)
 
 data MySum = Ctor1 | Ctor2 | MoarCtors
 
-derive instance eqMySum ∷ Eq MySum
-derive instance genericMySum ∷ Generic MySum _
+derive instance Eq MySum
+derive instance Generic MySum _
 
-instance showMySum ∷ Show MySum where
+instance Show MySum where
   show = genericShow
 
 genMySum ∷ Gen MySum
