@@ -10,7 +10,7 @@ module Data.Codec.JSON.Strict
 
 import Prelude hiding ((<<<), (<=<), (>=>), (>>>))
 
-import Codec.JSON.DecodeError as Error
+import Data.Codec.JSON.DecodeError as Error
 import Control.Monad.Except (Except, lift, throwError, withExceptT)
 import Control.Monad.State (StateT, modify_, runStateT)
 import Data.Codec (Codec(..), codec, codec', decode, encode) as Codec

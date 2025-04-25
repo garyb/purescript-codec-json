@@ -2,7 +2,7 @@ module Data.Codec.JSON.Variant where
 
 import Prelude
 
-import Codec.JSON.DecodeError as Error
+import Data.Codec.JSON.DecodeError as Error
 import Control.Monad.Except (Except, except)
 import Data.Array as Array
 import Data.Codec (Codec(..))

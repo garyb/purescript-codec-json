@@ -2,7 +2,7 @@ module Data.Codec.JSON.Generic where
 
 import Prelude
 
-import Codec.JSON.DecodeError as Error
+import Data.Codec.JSON.DecodeError as Error
 import Control.Alt ((<|>))
 import Control.Monad.Except (except)
 import Data.Bifunctor (lmap)

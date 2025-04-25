@@ -32,9 +32,9 @@ module Data.Codec.JSON
 
 import Prelude hiding ((<<<), (<=<), (>=>), (>>>))
 
-import Codec.JSON.DecodeError (DecodeError(..))
-import Codec.JSON.DecodeError (DecodeError(..)) as Exports
-import Codec.JSON.DecodeError as Error
+import Data.Codec.JSON.DecodeError (DecodeError(..))
+import Data.Codec.JSON.DecodeError (DecodeError(..)) as Exports
+import Data.Codec.JSON.DecodeError as Error
 import Control.Monad.Except (Except, except, runExcept)
 import Data.Codec (Codec(..), Codec', codec, codec', decode, encode) as Codec
 import Data.Codec (fix, hoist, identity, (<~<), (>~>), (~)) as Exports

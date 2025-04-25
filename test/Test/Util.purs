@@ -2,7 +2,7 @@ module Test.Util where
 
 import Prelude
 
-import Codec.JSON.DecodeError as DecodeError
+import Data.Codec.JSON.DecodeError as DecodeError
 import Control.Monad.Gen as Gen
 import Data.Codec.JSON as CJ
 import Data.Either (Either(..))

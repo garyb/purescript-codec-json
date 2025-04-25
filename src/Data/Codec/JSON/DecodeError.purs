@@ -1,4 +1,4 @@
-module Codec.JSON.DecodeError where
+module Data.Codec.JSON.DecodeError where
 
 import Prelude
 
