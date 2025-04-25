@@ -2,7 +2,7 @@ module Test.Record where
 
 import Prelude
 
-import Codec.JSON.DecodeError as Error
+import Data.Codec.JSON.DecodeError as Error
 import Control.Monad.Gen as Gen
 import Control.Monad.Gen.Common as GenC
 import Data.Bifunctor (lmap)

@@ -2,8 +2,8 @@ module Test.Main where
 
 import Prelude
 
-import Codec.JSON.DecodeError (DecodeError(..))
-import Codec.JSON.DecodeError as Error
+import Data.Codec.JSON.DecodeError (DecodeError(..))
+import Data.Codec.JSON.DecodeError as Error
 import Control.Alt ((<|>))
 import Data.Codec.JSON ((~))
 import Data.Codec.JSON as CJ
