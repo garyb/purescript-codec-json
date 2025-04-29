@@ -1,0 +1,43 @@
+package:
+  name: codec-json
+  publish:
+    license: MIT
+    version: 2.0.0
+    location:
+      githubOwner: garyb
+      githubRepo: purescript-codec-json
+  dependencies:
+    - arrays
+    - bifunctors
+    - codec
+    - control
+    - either
+    - foldable-traversable
+    - foreign-object
+    - integers
+    - json
+    - lists
+    - maybe
+    - newtype
+    - ordered-collections
+    - prelude
+    - profunctor
+    - record
+    - safe-coerce
+    - strings
+    - transformers
+    - tuples
+    - type-equality
+    - unsafe-coerce
+    - variant
+  test:
+    main: Test.Main
+    dependencies:
+      - console
+      - effect
+      - gen
+      - quickcheck
+workspace:
+  packageSet:
+    registry: 64.4.0
+  extraPackages: {}
