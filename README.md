@@ -8,7 +8,7 @@ Bi-directional codecs for [json](https://github.com/purescript/purescript-json).
 ## Installation
 
 ```
-bower install purescript-codec-json
+spago install codec-json
 ```
 
 ## Documentation
