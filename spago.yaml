@@ -35,5 +35,8 @@ package:
   test:
     main: Test.Main
     dependencies:
+      - console: ">=6.0.0 <7.0.0"
+      - effect: ">=4.0.0 <5.0.0"
+      - gen: ">=4.0.0 <5.0.0"
       - quickcheck: ">=8.0.1 <9.0.0"
 workspace: {}
